@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>
+        Shopping Website
+    </title>
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: hsl(249, 30%, 92%);
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: #080707;     
+    }
+    
+    h2 {
+        color: #8f1515;
+        font-size: 50px;
+    }
+    
+    .product {
+        display:inline-block;
+        border: 1px solid #131212;
+        padding: 20px;
+        margin-bottom: 50px;
+        background-color: #f0f2ec;
+       
+    }
+    
+    .add-to-cart-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    #cart {
+        
+        border: 5px solid #9e0c0c;
+        padding: 20px;
+        background-color: #f5f2f2;
+        border-radius: 5px;
+    }
+    
+    #total {
+        margin-top: 20px;
+    }
+    
+    #total-amount {
+        color: #046529;
+        font-size: 30px;
+        font-weight: bold;
+    }
+   </style>
+</head>
+<body>
+   
+    <script>
+        // Create container element
+const container = document.createElement('div');
+container.classList.add('container');
+
+// Create h2 element for My Products
+const productsHeader = document.createElement('h2');
+productsHeader.textContent = 'TITAN WATCHES';
+
+// Create product elements
+const Titan = createProduct('watch1.jpg', 'Analog Watch', 10000);
+const Titan2 = createProduct('watch2.jpg', 'Smart Watch', 30000);
+
+// Function to create product elements
+function createProduct(imageSrc, productName, price) {
+    // Create product div
+    const productDiv = document.createElement('div');
+    productDiv.classList.add('product');
+
+    // Create image element
+    const image = document.createElement('img');
+    image.src = imageSrc;
+    image.style.width = '300px'; // Adjust width as needed
+    image.style.height = '300px'; // Adjust height as needed
+    productDiv.appendChild(image);
+
+    // Create name paragraph
+    const nameParagraph = document.createElement('p');
+    nameParagraph.textContent = productName;
+    productDiv.appendChild(nameParagraph);
+
+    // Create price paragraph
+    const priceParagraph = document.createElement('p');
+    priceParagraph.textContent = 'Price: Rs' + price;
+    productDiv.appendChild(priceParagraph);
+
+    // Create add to cart button
+    const addToCartButton = document.createElement('button');
+    addToCartButton.textContent = 'Add to Cart';
+    addToCartButton.classList.add('add-to-cart-btn');
+    productDiv.appendChild(addToCartButton);
+
+    return productDiv;
+}
+
+// Create cart elements
+const cartDiv = document.createElement('div');
+cartDiv.id = 'cart';
+
+const cartHeader = document.createElement('h2');
+cartHeader.textContent = 'Your Cart';
+
+const cartItemsList = document.createElement('ul');
+cartItemsList.id = 'cart-items';
+
+const totalDiv = document.createElement('div');
+totalDiv.id = 'total';
+
+const totalHeader = document.createElement('h3');
+totalHeader.textContent = 'Total Amount:';
+
+const totalAmountParagraph = document.createElement('p');
+totalAmountParagraph.id = 'total-amount';
+totalAmountParagraph.textContent = 'Rs0';
+
+
+// Append elements to the DOM
+container.appendChild(productsHeader);
+container.appendChild(Titan);
+container.appendChild(Titan2);
+container.appendChild(cartDiv);
+
+cartDiv.appendChild(cartHeader);
+cartDiv.appendChild(cartItemsList);
+cartDiv.appendChild(totalDiv);
+
+totalDiv.appendChild(totalHeader);
+totalDiv.appendChild(totalAmountParagraph);
+
+// Append container to the body
+document.body.appendChild(container);
+
+// Event listener for DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function() {
+    const addToCartBtns = document.querySelectorAll(".add-to-cart-btn");
+    const cartItemsList = document.getElementById("cart-items");
+    const totalAmountDisplay = document.getElementById("total-amount");
+
+    let totalAmount = 0;
+    let cartItems = {}; // Object to keep track of cart items and their quantities
+
+    addToCartBtns.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            let productName = btn.parentElement.querySelector("p:nth-child(2)").textContent;
+            let productPrice = parseFloat(btn.parentElement.querySelector("p:nth-child(3)").textContent.split("Rs")[1]);
+
+            // Check if the product is already in the cart
+            if (productName in cartItems) {
+                // If yes, increment the quantity
+                cartItems[productName].quantity++;
+                // Update the quantity text in the cart
+                cartItems[productName].element.textContent = productName + " - Rs" + productPrice.toFixed(2) + " x " + cartItems[productName].quantity;
+            } else {
+                // If not, create a new cart item
+                const listItem = document.createElement("li");
+                listItem.textContent = productName + " - Rs" + productPrice.toFixed(2) + " x 1";
+                cartItemsList.appendChild(listItem);
+                // Create remove button
+                const removeBtn = document.createElement("button");
+                removeBtn.textContent = "Remove";
+                removeBtn.classList.add("remove-btn");
+                removeBtn.addEventListener("click", function() {
+                    // Remove the item from the cart
+                    cartItemsList.removeChild(listItems);
+                    // Update total amount
+                    totalAmount -= productPrice * cartItems[productName].quantity;
+                    totalAmountDisplay.textContent = "Rs" + totalAmount.toFixed(2);
+                    // Remove the item from the cartItems object
+                    delete cartItems[productName];
+                });
+                // Append remove button to the list item
+                listItem.appendChild(removeBtn);
+                cartItemsList.appendChild(listItem);
+                // Store the cart item and its quantity
+                cartItems[productName] = {
+                    element: listItem,
+                    quantity: 1
+                };
+            }
+            totalAmount += productPrice;
+            totalAmountDisplay.textContent = "Rs" + totalAmount.toFixed(2);
+        });
+    });
+});
+    </script>+
+</body>
+</html>
